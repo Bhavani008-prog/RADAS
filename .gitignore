@@ -1,0 +1,54 @@
+# ==============================================================================
+# Git Ignore Rules for Road Accident Data Analysis System (RADAS)
+# ==============================================================================
+
+# Environment variables & secrets (CRITICAL: Never commit credentials)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.settings/
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Local backups & scratch scripts
+backup/
+backup_auth/
+scratch/
+*.log
+
+# Pytest / coverage cache
+.pytest_cache/
+.coverage
+htmlcov/
+

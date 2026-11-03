@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis{% endblock %}
+
+{% block content %}
+
+    <!-- PAGE HEADING -->
+    <section class="welcome">
+        <div>
+            <span class="eyebrow">DATA INSIGHTS</span>
+            <h2 class="heading-title">Accident Analysis</h2>
+            <p class="heading-desc">
+                Visualizing recorded accident patterns by time of day, geographical region, severity, and operational periods.
+            </p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="{{ url_for('view_accidents') }}" class="secondary-button">
+                <span>View Records Table</span>
+            </a>
+            <a href="{{ url_for('home') }}#add-accident" class="primary-button">
+                <span>+ Add Record</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- SUMMARY METRICS BAR -->
+    <section class="analysis-summary-bar" aria-label="Dataset Summary">
+        <article class="mini-stat-card">
+            <span>Total Records</span>
+            <strong>{{ total_accidents }}</strong>
+        </article>
+
+        <article class="mini-stat-card">
+            <span>Most Affected Region</span>
+            <strong>{{ most_affected_region or 'N/A' }}</strong>
+        </article>
+
+        <article class="mini-stat-card">
+            <span>Most Common Vehicle</span>
+            <strong>{{ most_common_vehicle or 'N/A' }}</strong>
+        </article>
+
+        <article class="mini-stat-card">
+            <span>Peak Hour</span>
+            <strong>{{ busiest_hour or 'N/A' }}</strong>
+        </article>
+    </section>
+
+    <!-- CHARTS GRID -->
+    {% if total_accidents > 0 %}
+        <section class="chart-grid" aria-label="Analysis Visualizations">
+
+            {% for chart in chart_files %}
+                <article class="chart-card">
+                    <div class="chart-card-header">
+                        {% if chart == 'hourly_accidents.png' %}
+                            <span class="chart-number-badge">01</span>
+                            <div>
+                                <h3>Accidents by Hour</h3>
+                                <p>Hourly distribution of recorded incidents throughout the 24-hour cycle.</p>
+                            </div>
+                        {% elif chart == 'location_accidents.png' %}
+                            <span class="chart-number-badge">02</span>
+                            <div>
+                                <h3>Accidents by Location</h3>
+                                <p>Comparison of accident frequency across recorded regions.</p>
+                            </div>
+                        {% elif chart == 'severity_accidents.png' %}
+                            <span class="chart-number-badge">03</span>
+                            <div>
+                                <h3>Accidents by Severity</h3>
+                                <p>Breakdown of incidents categorized into Minor, Serious, and Fatal.</p>
+                            </div>
+                        {% elif chart == 'time_period_accidents.png' %}
+                            <span class="chart-number-badge">04</span>
+                            <div>
+                                <h3>Accidents by Time Period</h3>
+                                <p>Aggregated records across Morning, Afternoon, Evening, and Night intervals.</p>
+                            </div>
+                        {% else %}
+                            <span class="chart-number-badge">05</span>
+                            <div>
+                                <h3>{{ chart.replace('_', ' ').replace('.png', '').title() }}</h3>
+                                <p>Additional analytical pattern chart.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="chart-img-wrapper">
+                        <img src="{{ url_for('static', filename='charts/' + chart) }}"
+                             alt="Analysis chart for {{ chart.replace('_', ' ').replace('.png', '') }}"
+                             loading="lazy">
+                    </div>
+                </article>
+            {% endfor %}
+
+        </section>
+    {% else %}
+        <section class="content-card empty-state">
+            <div class="empty-icon">📊</div>
+            <h3>No Data Available for Analysis</h3>
+            <p>Add accident records to generate and view Matplotlib analysis charts.</p>
+            <a href="{{ url_for('home') }}#add-accident" class="primary-button">
+                <span>Add First Accident Record</span>
+            </a>
+        </section>
+    {% endif %}
+
+    <!-- INTERPRETATION DISCLAIMER -->
+    <section class="notice-card">
+        <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <span>How to Interpret These Charts</span>
+        </h3>
+        <p>
+            These charts summarize the accident records currently stored in your MySQL database. A higher count represents
+            more records in that category; it describes observed trends and does not by itself prove causation.
+        </p>
+        <p>
+            Conclusions should consider sampling size, reporting completeness, and environmental factors.
+        </p>
+    </section>
+
+{% endblock %}
